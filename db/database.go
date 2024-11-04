@@ -6,8 +6,8 @@ import (
 )
 
 func ConnectDB() (*sqlx.DB, error) {
-	
-	dsn := "host=localhost port=5432 user=postgres password=12345 dbname=shop sslmode=disable"
+
+	dsn := "port=5432 user=postgres password=12345 dbname=shop sslmode=disable"
 
 	db, err := sqlx.Connect("postgres", dsn)
 	if err != nil {
