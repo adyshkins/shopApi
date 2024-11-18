@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"shopApi/models"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
@@ -28,13 +30,19 @@ func GetProducts(db *sqlx.DB) gin.HandlerFunc {
 // Получение одного продукта по его ID
 func GetProduct(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		idStr := c.Param("id")
+		idStr := strings.TrimSpace(c.Param("id"))
+		if idStr == "" {
+			log.Println("Параметр id пуст")
+			c.JSON(http.StatusBadRequest, gin.H{"error": "ID пользователя отсутствует"})
+			return
+		}
+		log.Printf("Полученный параметр idStr: '%s'", idStr)
+
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Некорректный ID продукта"})
 			return
 		}
-
 		var product models.Product
 		err = db.Get(&product, "SELECT * FROM Product WHERE product_id = $1", id)
 		if err != nil {

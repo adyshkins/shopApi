@@ -25,12 +25,12 @@ func main() {
 	router.DELETE("/products/:id", handlers.DeleteProduct(db))
 
 	// Роуты для корзины
-	router.GET("/cart/:userId", handlers.GetCart(db))
+	router.GET("/cart/:id", handlers.GetCart(db))
 	router.POST("/cart/:userId", handlers.AddToCart(db))
 	router.DELETE("/cart/:userId/:productId", handlers.RemoveFromCart(db))
 
 	// Роуты для избранного
-	router.GET("/favorites/:userId", handlers.GetFavorites(db))
+	router.GET("/favorites/:id", handlers.GetFavorites(db))
 	router.POST("/favorites/:userId", handlers.AddToFavorites(db))
 	router.DELETE("/favorites/:userId/:productId", handlers.RemoveFromFavorites(db))
 

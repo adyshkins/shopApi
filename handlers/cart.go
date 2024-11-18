@@ -3,10 +3,43 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
+	"log"
 	"net/http"
+	"shopApi/models"
+	"strconv"
+	"strings"
 )
 
-func GetCart(db *sqlx.DB) gin.HandlerFunc { return nil }
+func GetCart(db *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Получаем ID из параметров маршрута
+		idStr := c.Param("id")
+		log.Println("Полученный параметр idStr:", idStr)
+
+		// Убираем лишние пробелы
+		idStr = strings.TrimSpace(idStr)
+
+		// Преобразуем ID в целое число
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			log.Println("Ошибка преобразования idStr в int:", err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Некорректный ID пользователя"})
+			return
+		}
+
+		// Выполняем запрос к базе данных
+		var cartUser []models.Cart
+		err = db.Select(&cartUser, "SELECT * FROM cart WHERE user_id = $1", id)
+		if err != nil {
+			log.Println("Ошибка запроса к базе данных:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка получения корзины"})
+			return
+		}
+
+		// Отправляем ответ
+		c.JSON(http.StatusOK, cartUser)
+	}
+}
 
 func AddToCart(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
