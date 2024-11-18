@@ -21,12 +21,12 @@ CREATE TABLE Users (
 
 -- Создаем таблицу для продуктов
 CREATE TABLE Product (
-    product_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
-    price DECIMAL(10, 2) NOT NULL,
-    stock INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  product_id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  description TEXT,
+  price DECIMAL(10, 2) NOT NULL,
+  stock INT DEFAULT 0,
+  image_url VARCHAR(255)
 );
 
 -- Создаем таблицу для избранных товаров
