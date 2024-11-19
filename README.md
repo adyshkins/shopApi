@@ -26,7 +26,7 @@ CREATE TABLE Product (
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     stock INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    image_url VARCHAR(255)
 );
 
 -- Создаем таблицу для избранных товаров
