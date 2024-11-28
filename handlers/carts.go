@@ -10,6 +10,14 @@ import (
 	"strings"
 )
 
+// GetCart godoc
+// @Summary Get all cart
+// @Description Получить список корзин
+// @Tags Cart
+// @Produce json
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /carts [get]
 func GetCart(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Получаем ID из параметров маршрута
@@ -41,6 +49,18 @@ func GetCart(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
+
+
+// AddCart godoc
+// @Summary Get all cart
+// @Description Добаление нового продукта в корзину
+// @Tags Cart
+//	@Produce		json
+//	@Param			id	path		int	true	"Cart ID"
+//	@Success		200	{object}	models.Cart
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+//	@Router			/carts/{id} [post]
 func AddToCart(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userId := c.Param("userId")

@@ -12,6 +12,15 @@ import (
 )
 
 // Получение списка всех продуктов
+
+// GetProducts godoc
+// @Summary Get all products
+// @Description Retrieves a list of all available products from the database.
+// @Tags Products
+// @Produce json
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /products [get]
 func GetProducts(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var products []models.Product
@@ -28,6 +37,18 @@ func GetProducts(db *sqlx.DB) gin.HandlerFunc {
 }
 
 // Получение одного продукта по его ID
+
+// GetProduct godoc
+//
+//	@Summary		Get product by ID
+//	@Description	Retrieves a single product by its ID.
+//	@Tags			Products
+//	@Produce		json
+//	@Param			id	path		int	true	"Product ID"
+//	@Success		200	{object}	models.Product
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+//	@Router			/products/{id} [get]
 func GetProduct(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := strings.TrimSpace(c.Param("id"))
@@ -54,6 +75,17 @@ func GetProduct(db *sqlx.DB) gin.HandlerFunc {
 }
 
 // Создание нового продукта
+// CreateProduct godoc
+//	@Summary		Create a new product
+//	@Description	Adds a new product to the database.
+//	@Tags			Products
+//	@Accept			json
+//	@Produce		json
+//	@Param			product	body		models.Product	true	"Product details"
+//	@Success		201		{object}	models.Product
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+//	@Router			/products [post]
 func CreateProduct(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var product models.Product
@@ -80,6 +112,20 @@ func CreateProduct(db *sqlx.DB) gin.HandlerFunc {
 }
 
 // Обновление существующего продукта по его ID
+
+// UpdateProduct godoc
+//
+//	@Summary		Update product by ID
+//	@Description	Updates the details of an existing product by its ID.
+//	@Tags			Products
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path		int				true	"Product ID"
+//	@Param			product	body		models.Product	true	"Updated product details"
+//	@Success		200		{object}	models.Product
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+//	@Router			/products/{id} [put]
 func UpdateProduct(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
@@ -110,6 +156,18 @@ func UpdateProduct(db *sqlx.DB) gin.HandlerFunc {
 }
 
 // Удаление продукта по его ID
+
+// DeleteProduct godoc
+//
+//	@Summary		Delete product by ID
+//	@Description	Deletes a product from the database by its ID.
+//	@Tags			Products
+//	@Produce		json
+//	@Param			id	path		int	true	"Product ID"
+//	@Success		200	{object}	map[string]string
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+//	@Router			/products/{id} [delete]
 func DeleteProduct(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
