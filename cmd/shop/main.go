@@ -61,7 +61,8 @@ func main() {
 
 	// Роуты для заказов
 	router.GET("/orders/:id", handlers.GetOrders(db))
-	router.POST("/orders/:id", handlers.CreateOrder(db))
+	router.POST("/orders/:user_id", handlers.CreateOrder(db))
+
 
 	// Запуск сервера
 	router.Run(":8080")

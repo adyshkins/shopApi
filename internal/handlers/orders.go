@@ -10,6 +10,9 @@ import (
 	"strings"
 )
 
+
+
+
 func GetOrders(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Получаем ID из параметров маршрута
@@ -42,29 +45,69 @@ func GetOrders(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
+
 func CreateOrder(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var order models.Order
+
+		// Привязываем данные из тела запроса
 		if err := c.ShouldBindJSON(&order); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Некорректные данные"})
 			return
 		}
 
-		query := `
-            INSERT INTO orders (user_id, total, status, created_at)
-            VALUES (:user_id, :total, :status, :created_at)
-        `
-
-		rows, err := db.NamedQuery(query, &order)
+		// Начинаем транзакцию
+		tx, err := db.Beginx()
 		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка инициализации транзакции"})
+			return
+		}
+
+		// Вставляем заказ в таблицу orders
+		queryOrder := `
+			INSERT INTO orders (user_id, total, status, created_at)
+			VALUES (:user_id, :total, :status, :created_at)
+			RETURNING order_id
+		`
+		rows, err := tx.NamedQuery(queryOrder, &order)
+		if err != nil {
+			tx.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка добавления заказа"})
 			return
 		}
 		if rows.Next() {
-			rows.Scan(&order.OrderID) // Присваиваем ID нового продукта
+			rows.Scan(&order.OrderID) // Получаем ID нового заказа
 		}
 		rows.Close()
 
+		// Вставляем товары в таблицу order_products
+		queryProducts := `
+			INSERT INTO order_products (order_id, product_id, quantity)
+			VALUES (:order_id, :product_id, :quantity)
+		`
+		for _, product := range order.Products {
+			productData := map[string]interface{}{
+				"order_id":   order.OrderID,
+				"product_id": product.ProductID,
+				"quantity":   product.Stock, // Здесь quantity (например, 1, 2 и т.д.) нужно передать из тела запроса
+			}
+			_, err := tx.NamedExec(queryProducts, productData)
+			if err != nil {
+				tx.Rollback()
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка добавления товаров к заказу"})
+				return
+			}
+		}
+
+		// Завершаем транзакцию
+		if err := tx.Commit(); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка сохранения заказа"})
+			return
+		}
+
+		// Отправляем ответ
 		c.JSON(http.StatusCreated, order)
 	}
 }
+
+

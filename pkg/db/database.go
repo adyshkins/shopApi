@@ -3,6 +3,7 @@ package db
 import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+
 )
 
 func ConnectDB() (*sqlx.DB, error) {
@@ -14,4 +15,12 @@ func ConnectDB() (*sqlx.DB, error) {
 		return nil, err
 	}
 	return db, nil
+
 }
+
+
+
+
+
+
+
