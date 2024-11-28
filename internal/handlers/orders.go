@@ -12,7 +12,16 @@ import (
 
 
 
-
+// GetOrders godoc
+// @Summary Get user orders
+// @Description Retrieves all orders for a specific user.
+// @Tags Orders
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {array} models.Order
+// @Failure 400 {object} ErrorResponse "Invalid User ID"
+// @Failure 500 {object} ErrorResponse "Internal server error"
+// @Router /orders/{id} [get]
 func GetOrders(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Получаем ID из параметров маршрута
@@ -45,7 +54,17 @@ func GetOrders(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-
+// CreateOrder godoc
+// @Summary Create a new order
+// @Description Adds a new order for a user, including products in the order.
+// @Tags Orders
+// @Accept json
+// @Produce json
+// @Param order body models.Order true "Order details"
+// @Success 201 {object} models.Order
+// @Failure 400 {object} ErrorResponse "Invalid request data"
+// @Failure 500 {object} ErrorResponse "Internal server error"
+// @Router /orders [post]
 func CreateOrder(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var order models.Order
