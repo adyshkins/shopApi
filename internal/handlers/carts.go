@@ -5,7 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"log"
 	"net/http"
-	"shopApi/models"
+	"shopApi/internal/models"
 	"strconv"
 	"strings"
 )

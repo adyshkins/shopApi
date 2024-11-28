@@ -3,7 +3,7 @@ package handlers
 import (
 	"log"
 	"net/http"
-	"shopApi/models"
+	"shopApi/internal/models"
 	"strconv"
 	"strings"
 

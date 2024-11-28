@@ -4,8 +4,8 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
-	"shopApi/db"
-	"shopApi/handlers"
+	"shopApi/internal/handlers"
+	"shopApi/pkg/db"
 
 	"github.com/gin-gonic/gin"
 
